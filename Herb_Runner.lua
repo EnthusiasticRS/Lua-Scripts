@@ -3,12 +3,12 @@
 
 -- only tested with wilderness sword 3, Explorer's ring 3, and quick tp charges. Will probably work with any w sword and explorers ring
 
--- todo: add startup checks, more teleport options, make low level version, clean up the code, add failsafes, make sure game messages are on (see foundCompost func)
+-- todo: add startup checks, more teleport options, make low level version, clean up the code, add failsafes 
 
 local API = require("api")
 local player = API.GetLocalPlayerName()
 local startTime, afk = os.time(), os.time()
-local location = 1
+local location = 8
 
 local IDS = {
     BANK_CHEST = {114750},
@@ -122,14 +122,16 @@ local selectedCompost = API.ScriptDialogWindow2(
 local seedAmount = API.ScriptDialogWindow2(
     "How many seeds per patch?", ({"1", "2", "4", "7", "10"}), "Start", "Close").Name
     local plantOption = ""
-    if seedAmount == "2" then
-        plantOption = 21
+    if seedAmount == "1" then
+        plantOption = 0x31
+    elseif seedAmount == "2" then
+        plantOption = 0x32
     elseif seedAmount == "4" then
-        plantOption = 23
+        plantOption = 0x33
     elseif seedAmount == "7" then
-        plantOption = 26
+        plantOption = 0x34
     elseif seedAmount == "10" then
-        plantOption = 29
+        plantOption = 0x35
     end
 -- end
 
@@ -426,8 +428,8 @@ local function plantSeeds()
     
     if API.Compare2874Status(13, true) then
         location = location + 1
-        API.RandomSleep2(1000, 100, 400)
-        API.DoAction_Interface(0xffffffff, 0xffffffff, 0, 720, plantOption, -1, API.OFF_ACT_GeneralInterface_Choose_option)
+        API.RandomSleep2(4000, 100, 400)
+        API.KeyboardPress2(plantOption, 60, 100)
         API.Log("Planted seeds")
         API.RandomSleep2(3000, 100, 400)
     else
