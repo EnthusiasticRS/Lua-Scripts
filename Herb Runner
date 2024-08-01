@@ -1,6 +1,6 @@
-
 -- Setup link: https://github.com/EnthusiasticRS/Lua-Scripts/
 -- in progress
+-- todo: add startup checks, more teleport options, make low level version, clean up the code
 
 local API = require("api")
 local player = API.GetLocalPlayerName()
