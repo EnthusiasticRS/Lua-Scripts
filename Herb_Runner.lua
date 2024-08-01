@@ -426,7 +426,7 @@ local function plantSeeds()
     
     if API.Compare2874Status(13, true) then
         location = location + 1
-        API.RandomSleep2(4000, 100, 400)
+        API.RandomSleep2(1000, 100, 400)
         API.DoAction_Interface(0xffffffff, 0xffffffff, 0, 720, plantOption, -1, API.OFF_ACT_GeneralInterface_Choose_option)
         API.Log("Planted seeds")
         API.RandomSleep2(3000, 100, 400)
