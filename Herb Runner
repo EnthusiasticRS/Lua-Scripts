@@ -1,6 +1,9 @@
 -- Setup link: https://github.com/EnthusiasticRS/Lua-Scripts/
--- in progress
--- todo: add startup checks, more teleport options, make low level version, clean up the code
+-- in progress, do not leave on over night - haven't coded any failsafes yet
+
+-- only tested with wilderness sword 3, Explorer's ring 3, and quick tp charges. Will probably work with any w sword and explorers ring
+
+-- todo: add startup check, more teleport options, make low level version, clean up the code, add failsafes 
 
 local API = require("api")
 local player = API.GetLocalPlayerName()
