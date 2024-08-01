@@ -1,9 +1,7 @@
 -- Setup link: https://github.com/EnthusiasticRS/Lua-Scripts/
--- in progress, do not leave on over night - haven't coded any failsafes yet
+-- in progress, do not leave on over night
 
--- only tested with wilderness sword 3, Explorer's ring 3, and quick tp charges. Will probably work with any w sword and explorers ring
-
--- todo: add startup checks, more teleport options, make low level version, clean up the code, add failsafes 
+-- only tested with wilderness sword 3 and Explorer's ring 3 - make sure to have quick tp charges (vis wax)
 
 local API = require("api")
 local player = API.GetLocalPlayerName()
@@ -76,7 +74,7 @@ local compostID = {
     ULTRACOMPOST = 43966,
 }
 
-local LOCATIONS = { -- in order
+local LOCATIONS = {
     WARS_RETREAT = {x1 = 3292, x2 = 3305, y1 = 10124, y2 = 10134},
     CABBAGE_FIELD = {x1 = 3043, x2 = 3068, y1 = 3283, y2 = 3315},
     ECTOPHUNTUS = {x1 = 3595, x2 = 3666, y1 = 3514, y2 = 3536},
@@ -92,15 +90,15 @@ local LOCATIONS = { -- in order
     AL_KHARID_3 = {x1 = 3310, x2 = 3321, y1 = 3286, y2 = 3314},
     WILDERNESS = {x1 = 3137, x2 = 3149, y1 = 3813, y2 = 3828},
 
-    PATCHES = { -- in order
+    PATCHES = {
         DRAYNOR = {x1 = 3047, x2 = 3062, y1 = 3300, y2 = 3314},
         PHASMATYS = {x1 = 3603, x2 = 3616, y1 = 3525, y2 = 3535},
         CATHERBY = {x1 = 2770, x2 = 2797, y1 = 3459, y2 = 3466},
         ARDOUGNE = {x1 = 2656, x2 = 2671, y1 = 3365, y2 = 3380},
         TROLLHEIM = {x1 = 2805, x2 = 2820, y1 = 3664, y2 = 3684},
         PRIFDDINAS = {x1 = 2244, x2 = 2253, y1 = 3373, y2 = 3390},
+        KHARID = {x1 = 3310, x2 = 3321, y1 = 3286, y2 = 3314},
         WILDERNESS = {x1 = 3137, x2 = 3149, y1 = 3813, y2 = 3828},
-        KHARID = {x1 = 3310, x2 = 3321, y1 = 3286, y2 = 3314}
     }
 }
 
@@ -136,16 +134,6 @@ local seedAmount = API.ScriptDialogWindow2(
 -- end
 
 -- functions
-local function idleCheck()
-    local timeDiff = os.difftime(os.time(), afk)
-    local randomTime = math.random((MAX_IDLE_TIME_MINUTES * 60) * 0.6, (MAX_IDLE_TIME_MINUTES * 60) * 0.9)
-
-    if timeDiff > randomTime then
-        API.PIdle2()
-        afk = os.time()
-    end
-end
-
 local function gotoTile(x, y, z) --random coord selection
     if x and y and z then
         math.randomseed(os.time())
@@ -167,12 +155,18 @@ end
 
 local function teleportCabbageField()
     local tp = API.GetABs_name1("Explorer's ring 3")
+    local tp2 = API.GetABs_name1("Explorer's ring 4")
+
     if tp.enabled then
         API.Log("Teleported to Cabbage Field")
         API.DoAction_Ability_Direct(tp, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(5500, 100, 600)
+        API.RandomSleep2(6000, 100, 600)
+    elseif tp2.enabled then
+        API.Log("Teleported to Cabbage Field")
+        API.DoAction_Ability_Direct(tp2, 1, API.OFF_ACT_GeneralInterface_route)
+        API.RandomSleep2(6000, 100, 600)
     else
-        API.ErrorLog("Could not find Explorer's ring")
+        API.ErrorLog("Could not find Explorer's ring 3 or 4")
     end
 end
 
@@ -192,7 +186,7 @@ local function teleportCamelot()
     if tp.enabled then
         API.Log("Teleported to Camelot")
         API.DoAction_Ability_Direct(tp, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(3000, 100, 600)
+        API.RandomSleep2(4500, 100, 600)
     else
         API.ErrorLog("Could not find Camelot Teleport")
     end
@@ -203,7 +197,7 @@ local function teleportArdougne()
     if tp.enabled then
         API.Log("Teleported to Ardougne")
         API.DoAction_Ability_Direct(tp, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(5500, 100, 600)
+        API.RandomSleep2(6000, 100, 600)
     else
         API.ErrorLog("Could not find Camelot Teleport")
     end
@@ -214,7 +208,7 @@ local function teleportTrollheim()
     if tp.enabled then
         API.Log("Teleported to Trollheim")
         API.DoAction_Ability_Direct(tp, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(3000, 100, 600)
+        API.RandomSleep2(4500, 100, 600)
     else
         API.ErrorLog("Could not find Camelot Teleport")
     end
@@ -245,9 +239,9 @@ end
 local function teleportWilderness()
     if API.Compare2874Status(13, true) then
         API.KeyboardPress2(0x31, 60, 100)
-        API.RandomSleep2(500, 100, 200)
+        API.RandomSleep2(500, 100, 400)
         API.KeyboardPress2(0x32, 60, 100)
-        API.RandomSleep2(2500, 100, 200)
+        API.RandomSleep2(3500, 100, 200)
     else 
         API.DoAction_Inventory1(IDS.WILDERNESS_SWORD, 0, 2, API.OFF_ACT_GeneralInterface_route)
         API.RandomSleep2(500, 100, 200)
@@ -323,7 +317,6 @@ local function foundWeeds()
     if #weeds > 0 then
         for _, v in ipairs(weeds) do
             if v.Action == "Rake" then
-                API.Log("Found weeds")
                 return true
             end
         end
@@ -390,12 +383,12 @@ local function clearDiseased()
     local chatOption = 8
 
     if API.Check_Dialog_Open() and not API.ReadPlayerMovin2() then
-        API.DoAction_Interface(0xffffffff, 0xffffffff, 0, 1188, chatOption, -1, API.OFF_ACT_GeneralInterface_Choose_option)
+        API.KeyboardPress2(0x31, 60, 100)
         API.RandomSleep2(3000, 200, 600)
     else
         API.Log("Clearing diseased herbs")
         API.DoAction_Object1(0x29, API.OFF_ACT_GeneralObject_route2, IDS.DISEASED_HERB, 50);
-        API.RandomSleep2(3500, 200, 600)
+        API.RandomSleep2(4500, 200, 600)
     end
 end
 
@@ -428,13 +421,13 @@ local function plantSeeds()
     
     if API.Compare2874Status(13, true) then
         location = location + 1
-        API.RandomSleep2(4000, 100, 400)
+        API.RandomSleep2(1000, 100, 400)
         API.KeyboardPress2(plantOption, 60, 100)
         API.Log("Planted seeds")
         API.RandomSleep2(3000, 100, 400)
     else
         API.DoAction_Inventory1(seed, 0, 0, API.OFF_ACT_Bladed_interface_route)
-        API.RandomSleep2(1000, 200, 400)
+        API.RandomSleep2(800, 200, 400)
         API.DoAction_Object1(0x24, API.OFF_ACT_GeneralObject_route00, IDS.HERB_PATCH_ALL, 50);
     end
 end
@@ -445,7 +438,7 @@ local function noteHerbs()
         API.DoAction_Inventory1(IDS.GRIMY, 0, 0, API.OFF_ACT_Bladed_interface_route)
         API.RandomSleep2(1000, 100, 400)
         API.DoAction_NPC(0x24, API.OFF_ACT_BladedDiveNPC_route, IDS.LEPRECHAUN, 50)
-        API.RandomSleep2(1700, 100, 400)
+        API.RandomSleep2(1500, 100, 400)
     end
 end
 
@@ -506,7 +499,7 @@ local function walk()
 
         elseif atLocation(LOCATIONS.TROLLHEIM_2) and not API.ReadPlayerMovin2() then
             API.DoAction_Object1(0x39, API.OFF_ACT_GeneralObject_route0, IDS.TROLLHEIM_CAVE, 50);
-            API.RandomSleep2(7000, 100, 600)
+            API.RandomSleep2(8500, 100, 600)
 
         elseif atLocation(LOCATIONS.TROLLHEIM_3) and not API.ReadPlayerMovin2() then
             API.DoAction_Object1(0x34, API.OFF_ACT_GeneralObject_route0, IDS.TROLLHEIM_LADDER, 50);
@@ -573,3 +566,6 @@ while API.Read_LoopyLoop() do
 
     API.RandomSleep2(400, 100, 200)
 end
+
+API.SetDrawLogs(false)
+API.SetDrawTrackedSkills(false)
