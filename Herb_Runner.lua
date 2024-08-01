@@ -8,7 +8,7 @@
 local API = require("api")
 local player = API.GetLocalPlayerName()
 local startTime, afk = os.time(), os.time()
-local location = 8
+local location = 1
 
 local IDS = {
     BANK_CHEST = {114750},
