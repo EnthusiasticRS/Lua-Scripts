@@ -3,7 +3,7 @@
 
 -- only tested with wilderness sword 3, Explorer's ring 3, and quick tp charges. Will probably work with any w sword and explorers ring
 
--- todo: add startup checks, more teleport options, make low level version, clean up the code, add failsafes 
+-- todo: add startup checks, more teleport options, make low level version, clean up the code, add failsafes, make sure game messages are on (see foundCompost func)
 
 local API = require("api")
 local player = API.GetLocalPlayerName()
