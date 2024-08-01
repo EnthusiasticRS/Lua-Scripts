@@ -1,6 +1,6 @@
 SETUP
 
-Use any compost, any herb seed + bloodweed seed
+Use any compost, any herb seed + bloodweed seeds
 
 ![Inventory](https://github.com/user-attachments/assets/7d7652cf-e624-4f14-ab25-c6c9d5544622)
 
